@@ -88,16 +88,9 @@ Enable webhooks in your GitHub repository settings
 
 2. Go to Jenkins web console, click "New Item" and create a "Freestyle project"
 
-![alt text](image.jpg)
-
 To connect your GitHub repository, you will need to provide its URL, you can copy from the repository itself
 
-![alt text](image.jpg)
-
 In configuration of your Jenkins freestyle project choose Git repository, provide there the link to your Tooling GitHub repository and credentials (user/password) so Jenkins could access files in the repository.
-
-![alt text](image.jpg)
-
 
 Save the configuration and let us try to run the build. For now we can only do it manually.
 Click "Build Now" button, if you have configured everything correctly, the build will be successfull and you will see it under <mark>#1</mark>
@@ -185,11 +178,14 @@ Webhook will trigger a new job and in the "Console Output" of the job you will f
 
 SSH: Transferred 25 file(s)
 Finished: SUCCESS
+
+![Console Output](../images/console-output1.png)
+
 To make sure that the files in <mark>/mnt/apps</mark> have been updated – connect via SSH/Putty to your NFS server and check README.MD file
 
 `cat /mnt/apps/README.md`
 
-
+![Updated read.me](../images/updated-readme.png)
 If you see the changes you had previously made in your GitHub – the job works as expected.
 
 Congratulations!
