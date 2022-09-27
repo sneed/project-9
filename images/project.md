@@ -125,7 +125,7 @@ Now, go ahead and make some change in any file in your GitHub repository (e.g. R
 
 You will see that a new build has been launched automatically (by webhook) and you can see its results – artifacts, saved on Jenkins server.
 
-![alt text](../)
+![build launched by webhook](../images/build-artifacts.png)
 
 
 You have now configured an automated Jenkins job that receives files from GitHub by webhook trigger (this method is considered as ‘push’ because the changes are being ‘pushed’ and files transfer is initiated by GitHub). There are also other methods: trigger one job (downstreadm) from another (upstream), poll GitHub periodically and others.
@@ -134,6 +134,8 @@ By default, the artifacts are stored on Jenkins server locally
 
 
 `ls /var/lib/jenkins/jobs/tooling_github/builds/<build_number>/archive/`
+
+![Artifacts stored in jenkins server locally](../images/artifactsjenkins-serverlocally.png)
 
 
 ## CONFIGURE JENKINS TO COPY FILES TO NFS SERVER VIA SSH
@@ -149,7 +151,7 @@ On main dashboard select "Manage Jenkins" and choose "Manage Plugins" menu item.
 On "Available" tab search for ["Publish Over SSH"](https://plugins.jenkins.io/publish-over-ssh/) plugin and install it
 
 
-![alt text](image.jpg)
+![Publish over SSH](../images/pluginmanager-publishoverSSH.png)
 
 2. Configure the job/project to copy artifacts over to NFS server.
 On main dashboard select "Manage Jenkins" and choose "Configure System" menu item.
@@ -164,17 +166,17 @@ Scroll down to Publish over SSH plugin configuration section and configure it to
 
 Test the configuration and make sure the connection returns Success. Remember, that TCP port 22 on NFS server must be open to receive SSH connections.
 
-![alt text](image.jpg)
+![Test config](../images/publishoverSSHtestconfig-success.png)
 
 Save the configuration, open your Jenkins job/project configuration page and add another one "Post-build Action"
 
-![alt text](image.jpg)
+![Add new post build action](../images/new-postbuildactions.png)
 
 
 Configure it to send all files produced by the build into our previously define remote directory. In our case we want to copy all files and directories – so we use <mark>**</mark>.
 If you want to apply some particular pattern to define which files to send – [use this syntax.](https://ant.apache.org/manual/dirtasks.html#patterns)
 
-![alt text](image.jpg)
+![Save config](../images/save-config.png)
 
 
 Save this configuration and go ahead, change something in <amrk>README.MD</mark> file in your GitHub Tooling repository.
