@@ -18,7 +18,7 @@ Enhance the architecture prepared in Project 8 by adding a Jenkins server, confi
 
 Here is how your updated architecture will look like upon competion of this project:
 
-![Architecture](../images/Architecture.png)
+![Architecture](images/Architecture.png)
 
 Let us do it!
 
@@ -47,34 +47,34 @@ Make sure Jenkins is up and running
 
 `sudo systemctl status jenkins`
 
-![Jenkins up and running](../images/jenkins-running.png) 
+![Jenkins up and running](images/jenkins-running.png) 
 
 4. By default Jenkins server uses TCP port 8080 – open it by creating a new Inbound Rule in your EC2 Security Group
 
-![TCP port 8080](../images/jenkins-tcp8080.png)
+![TCP port 8080](images/jenkins-tcp8080.png)
 
 5. Perform initial Jenkins setup.
    From your browser access <mark>http://<Jenkins-Server-Public-IP-Address-or-Public-DNS-Name>:8080</mark>
 
 You will be prompted to provide a default admin password
 
-![Prompted default password](../images/prompted-defaultpassword.png)
+![Prompted default password](images/prompted-defaultpassword.png)
 
 Retrieve it from your server:
 
 `sudo cat /var/lib/jenkins/secrets/initialAdminPassword`
 
-![Jenkins password](../images/Jenkins-password.png)
+![Jenkins password](images/Jenkins-password.png)
 
 Then you will be asked which plugins to install – choose suggested plugins.
 
-![Plugin to install](../images/unlock-jenkins.png)
+![Plugin to install](images/unlock-jenkins.png)
 
 Once plugins installation is done – create an admin user and you will get your Jenkins server address.
 
 The installation is completed!
 
-![Installation completed](../images/Jenkins-ready.png)
+![Installation completed](images/Jenkins-ready.png)
 
 
 ### Step 2 – Configure Jenkins to retrieve source codes from GitHub using Webhooks
@@ -83,7 +83,7 @@ The installation is completed!
 
 Enable webhooks in your GitHub repository settings
 
-![Enable webhooks](../images/add-webhook.png)
+![Enable webhooks](images/add-webhook.png)
 
 
 2. Go to Jenkins web console, click "New Item" and create a "Freestyle project"
@@ -95,7 +95,7 @@ In configuration of your Jenkins freestyle project choose Git repository, provid
 Save the configuration and let us try to run the build. For now we can only do it manually.
 Click "Build Now" button, if you have configured everything correctly, the build will be successfull and you will see it under <mark>#1</mark>
 
-![Build Now](../images/build-now.png)
+![Build Now](images/build-now.png)
 
 You can open the build and check in "Console Output" if it has run successfully.
 
@@ -103,22 +103,22 @@ If so – congratulations! You have just made your very first Jenkins build!
 
 But this build does not produce anything and it runs only when we trigger it manually. Let us fix it.
 
-![Console Output](../images/console-output.png)
+![Console Output](images/console-output.png)
 
 3. Click "Configure" your job/project and add these two configurations
 Configure triggering the job from GitHub webhook:
 
-![Configure webhook](../images/configure-hooktrigger.png)
+![Configure webhook](images/configure-hooktrigger.png)
 
 Configure "Post-build Actions" to archive all the files – files resulted from a build are called "artifacts".
 
-![Post build actions](../images/postbuild-actions.png)
+![Post build actions](images/postbuild-actions.png)
 
 Now, go ahead and make some change in any file in your GitHub repository (e.g. README.MD file) and push the changes to the master branch.
 
 You will see that a new build has been launched automatically (by webhook) and you can see its results – artifacts, saved on Jenkins server.
 
-![build launched by webhook](../images/build-artifacts.png)
+![build launched by webhook](images/build-artifacts.png)
 
 
 You have now configured an automated Jenkins job that receives files from GitHub by webhook trigger (this method is considered as ‘push’ because the changes are being ‘pushed’ and files transfer is initiated by GitHub). There are also other methods: trigger one job (downstreadm) from another (upstream), poll GitHub periodically and others.
@@ -128,7 +128,7 @@ By default, the artifacts are stored on Jenkins server locally
 
 `ls /var/lib/jenkins/jobs/tooling_github/builds/<build_number>/archive/`
 
-![Artifacts stored in jenkins server locally](../images/artifactsjenkins-serverlocally.png)
+![Artifacts stored in jenkins server locally](images/artifactsjenkins-serverlocally.png)
 
 
 ## CONFIGURE JENKINS TO COPY FILES TO NFS SERVER VIA SSH
@@ -144,7 +144,7 @@ On main dashboard select "Manage Jenkins" and choose "Manage Plugins" menu item.
 On "Available" tab search for ["Publish Over SSH"](https://plugins.jenkins.io/publish-over-ssh/) plugin and install it
 
 
-![Publish over SSH](../images/pluginmanager-publishoverSSH.png)
+![Publish over SSH](images/pluginmanager-publishoverSSH.png)
 
 2. Configure the job/project to copy artifacts over to NFS server.
 On main dashboard select "Manage Jenkins" and choose "Configure System" menu item.
@@ -159,17 +159,17 @@ Scroll down to Publish over SSH plugin configuration section and configure it to
 
 Test the configuration and make sure the connection returns Success. Remember, that TCP port 22 on NFS server must be open to receive SSH connections.
 
-![Test config](../images/publishoverSSHtestconfig-success.png)
+![Test config](images/publishoverSSHtestconfig-success.png)
 
 Save the configuration, open your Jenkins job/project configuration page and add another one "Post-build Action"
 
-![Add new post build action](../images/new-postbuildactions.png)
+![Add new post build action](images/new-postbuildactions.png)
 
 
 Configure it to send all files produced by the build into our previously define remote directory. In our case we want to copy all files and directories – so we use <mark>**</mark>.
 If you want to apply some particular pattern to define which files to send – [use this syntax.](https://ant.apache.org/manual/dirtasks.html#patterns)
 
-![Save config](../images/save-config.png)
+![Save config](images/save-config.png)
 
 
 Save this configuration and go ahead, change something in <amrk>README.MD</mark> file in your GitHub Tooling repository.
@@ -179,13 +179,13 @@ Webhook will trigger a new job and in the "Console Output" of the job you will f
 SSH: Transferred 25 file(s)
 Finished: SUCCESS
 
-![Console Output](../images/console-output1.png)
+![Console Output](images/console-output1.png)
 
 To make sure that the files in <mark>/mnt/apps</mark> have been updated – connect via SSH/Putty to your NFS server and check README.MD file
 
 `cat /mnt/apps/README.md`
 
-![Updated read.me](../images/updated-readme.png)
+![Updated read.me](images/updated-readme.png)
 If you see the changes you had previously made in your GitHub – the job works as expected.
 
 Congratulations!
